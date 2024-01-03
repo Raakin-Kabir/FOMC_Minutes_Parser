@@ -1,4 +1,4 @@
-import nltk 
+import nltk, random
 from nltk.corpus import words
 from nltk.corpus import wordnet 
 from tika import parser
@@ -14,6 +14,7 @@ from nltk.tokenize.treebank import TreebankWordDetokenizer
 # (3) Tokenize into sentences with NLTK sent_tokenize and make it all lowercase
 # (4) Convert each number to its character equivalent (including time!)
 # (5) Remove blank lines
+# (6) Take random lines
 
 # What needs to be done now is take only the relevant sections...
 # This means starting from "Developments in Financial Markets and Open Market Operations"
@@ -175,6 +176,9 @@ while index < len(sent_text):
     else:
         index += 1
 
+sentences_num = len(sent_text)
+numbers = list(range(0, sentences_num))
+random_numbers = random.sample(numbers, 20)
 # adding each sentence to an excel document 
 workbook = xlsxwriter.Workbook("fomc_minute_2017.xlsx")
 worksheet = workbook.add_worksheet("first_sheet")
@@ -183,9 +187,12 @@ worksheet.write(0, 0, "Sentence Number")
 worksheet.write(0, 1, "Sentence")
 
 row = 1
+index = 0
 for sentence in sent_text:
-    worksheet.write(row, 0, str(row))
-    worksheet.write(row, 1, sentence)
-    row += 1
+    if index in random_numbers:
+        worksheet.write(row, 0, str(row))
+        worksheet.write(row, 1, sentence)
+        row += 1
+    index += 1
 
 workbook.close()
